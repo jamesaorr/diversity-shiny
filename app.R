@@ -157,6 +157,7 @@ server <- function(input, output) {
   
   output$abundance_curve <- renderPlot({
     abundances <- parsed_abundances()
+    abundances <- abundances[abundances > 0]  # Remove zeros
     df <- data.frame(Species = seq_along(abundances), Abundance = sort(abundances, decreasing = TRUE))
     
     ggplot(df, aes(x = Species, y = Abundance)) +
@@ -173,12 +174,14 @@ server <- function(input, output) {
   
   output$richness_out <- renderText({
     abundances <- parsed_abundances()
+    abundances <- abundances[abundances > 0]  # Remove zeros
     length(abundances)
   })
   
   # have to put it in twice as I call it twice (on each tab)
   output$richness_out2 <- renderText({
     abundances <- parsed_abundances()
+    abundances <- abundances[abundances > 0]  # Remove zeros
     length(abundances)
   })
   
@@ -188,6 +191,7 @@ server <- function(input, output) {
   
   output$evenness_out <- renderText({
     abundances <- parsed_abundances()
+    abundances <- abundances[abundances > 0]  # Remove zeros
     S <- length(abundances)
     shannon <- diversity(abundances, index = "shannon")
     round(shannon / log(S), 3)
